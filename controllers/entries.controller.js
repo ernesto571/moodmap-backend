@@ -7,7 +7,7 @@ export const addEntry = async(req, res) => {
         const { note, mood, energy } = req.body
 
         // ✅ inside the function, after user_id is available
-        const today = new Date().toISOString().split("T")[0];
+        const today = new Date().toLocaleDateString("en-CA");
         const existing = await sql`
             SELECT id FROM entries 
             WHERE user_id = ${user_id} 
