@@ -34,7 +34,7 @@ cron.schedule('0 22 * * 0', async () => {
     await generateWeeklyReports();
 });
 
-generateWeeklyReports()
+// generateWeeklyReports()
 
 // Log all requests
 app.use((req, res, next) => {
