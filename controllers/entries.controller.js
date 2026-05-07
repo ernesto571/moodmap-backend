@@ -54,6 +54,21 @@ export const editEntry = async (req, res) => {
         const { user_id } = await getUserFromClerk(req)
         const { note, mood, energy } = req.body
 
+        let mood_score
+        if (mood === "Low") mood_score = 2;
+        else if (mood === "Meh") mood_score = 4;
+        else if (mood === "Good") mood_score = 6;
+        else if (mood === "Great") mood_score = 8;
+        else mood_score = 10;
+        let energy_score
+        if (energy === 1) energy_score = -1;
+        else if (energy === 2) energy_score = -0.5;
+        else if (energy === 3) energy_score = 0;
+        else if (energy === 4) energy_score = 0.5;
+        else energy_score = 1;
+
+        const final_score = Math.min(mood_score + energy_score, 10);
+
         const existing = await sql`
             SELECT * FROM entries WHERE id = ${id} AND user_id = ${user_id}
         `;
@@ -67,6 +82,7 @@ export const editEntry = async (req, res) => {
                 note = COALESCE(${note}, note),
                 mood = COALESCE(${mood}, mood),
                 energy = COALESCE(${energy}, energy),
+                score = COALESCE(${final_score}, score),
                 updated_at = CURRENT_TIMESTAMP
             WHERE id = ${id} AND user_id = ${user_id}
             RETURNING *
