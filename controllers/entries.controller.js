@@ -9,9 +9,10 @@ export const addEntry = async(req, res) => {
         // ✅ inside the function, after user_id is available
         const today = new Date().toLocaleDateString("en-CA");
         const existing = await sql`
-            SELECT id FROM entries 
-            WHERE user_id = ${user_id} 
-            AND created_at::date = ${today}::date
+            SELECT id FROM entries
+            WHERE user_id = ${user_id}
+            AND created_at >= ${today}::date
+            AND created_at < (${today}::date + INTERVAL '1 day')
             LIMIT 1
         `;
         if (existing.length > 0) {
